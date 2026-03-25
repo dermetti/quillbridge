@@ -50,6 +50,9 @@ func main() {
 	// OCS capabilities endpoint — required by Quillpad on first connect.
 	r.Get("/ocs/v2.php/cloud/capabilities", capabilitiesHandler)
 
+	// logo.svg
+	r.Get("/logo.svg", logoHandler)
+
 	// Notes API routes: require Basic Auth, quota enforcement, and the version header.
 	r.Group(func(r chi.Router) {
 		r.Use(mw.NotesAPIVersionHeader)
@@ -83,12 +86,23 @@ func capabilitiesHandler(w http.ResponseWriter, r *http.Request) {
 					"notes": map[string]any{
 						"api_version": []string{"1.0", "1.1", "1.2", "1.3", "1.4"},
 						"version":     "1.0.0",
+						"attachments": true,
 					},
 				},
 			},
 		},
 	}
 	json.NewEncoder(w).Encode(resp)
+}
+
+// logo handler function
+func logoHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "image/svg+xml")
+	svg := `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+        <rect width="100" height="100" rx="20" fill="#007bff"/>
+        <path d="M30 70 L50 30 L70 70" stroke="white" stroke-width="8" fill="none"/>
+    </svg>`
+	w.Write([]byte(svg))
 }
 
 func seedAdmin(database *db.DB) error {
