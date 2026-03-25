@@ -81,11 +81,16 @@ func capabilitiesHandler(w http.ResponseWriter, r *http.Request) {
 
 	resp := map[string]any{
 		"ocs": map[string]any{
+			"meta": map[string]any{
+				"status":     "ok",
+				"statuscode": 200,
+				"message":    "OK",
+			},
 			"data": map[string]any{
 				"capabilities": map[string]any{
 					"notes": map[string]any{
-						"api_version": []string{"1.0", "1.1", "1.2", "1.3", "1.4"},
-						"version":     "1.0.0",
+						"api_version": []string{"1.4"},
+						"version":     "4.9.0",
 						"attachments": true,
 					},
 				},
