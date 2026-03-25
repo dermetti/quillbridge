@@ -1,0 +1,12 @@
+services:
+  quillbridge:
+    build: .
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./data:/app/data
+    environment:
+      # Override these before first run to set your admin credentials.
+      ADMIN_USER: quillbridgeadmin
+      ADMIN_PASS: quillbridgepass
+    restart: unless-stopped

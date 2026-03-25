@@ -43,3 +43,12 @@ attachments/
 
 # Ignore local environment variables (passwords/keys)
 .env
+
+# claude
+.claude
+CLAUDE.md
+
+# context
+api_v1.md
+notes_api.md
+requirements.md

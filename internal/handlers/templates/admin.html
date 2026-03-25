@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Quillbridge — Admin</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+</head>
+<body>
+  <nav class="container-fluid">
+    <ul><li><strong>Quillbridge Admin</strong></li></ul>
+    <ul>
+      <li><a href="/">Dashboard</a></li>
+      <li>
+        <form method="POST" action="/logout" style="margin:0">
+          <button type="submit" class="secondary outline" style="padding:0.25rem 0.75rem">Sign out</button>
+        </form>
+      </li>
+    </ul>
+  </nav>
+
+  <main class="container">
+    <h2>User Management</h2>
+
+    {{if .Error}}<p style="color:var(--pico-color-red-500)">{{.Error}}</p>{{end}}
+    {{if .OK}}<p style="color:var(--pico-color-green-500)">{{.OK}}</p>{{end}}
+
+    <!-- Create user -->
+    <article>
+      <h4>Create User</h4>
+      <form method="POST" action="/admin/users">
+        <div class="grid">
+          <label>Username<input name="username" type="text" required></label>
+          <label>Password<input name="password" type="password" required></label>
+        </div>
+        <div class="grid">
+          <label>Quota (MB)<input name="quota_mb" type="number" min="1" value="100" required></label>
+          <label><input name="is_admin" type="checkbox" value="1"> Admin</label>
+        </div>
+        <button type="submit">Create</button>
+      </form>
+    </article>
+
+    <!-- User list -->
+    <article>
+      <h4>Users</h4>
+      <table>
+        <thead>
+          <tr>
+            <th>Username</th><th>Quota</th><th>Used</th><th>Admin</th>
+            <th>Set Quota</th><th>Reset Password</th><th>Delete</th>
+          </tr>
+        </thead>
+        <tbody>
+        {{range .Users}}
+          <tr>
+            <td>{{.Username}}</td>
+            <td>{{.QuotaHuman}}</td>
+            <td>{{.UsedHuman}}</td>
+            <td>{{if .IsAdmin}}✓{{end}}</td>
+
+            <!-- Set quota -->
+            <td>
+              <form method="POST" action="/admin/users/{{.ID}}/quota" style="margin:0;display:flex;gap:0.25rem">
+                <input name="quota_mb" type="number" min="1" value="{{.QuotaMB}}" style="width:5rem">
+                <button type="submit" style="padding:0.1rem 0.5rem">Set</button>
+              </form>
+            </td>
+
+            <!-- Reset password -->
+            <td>
+              <form method="POST" action="/admin/users/{{.ID}}/password" style="margin:0;display:flex;gap:0.25rem">
+                <input name="password" type="password" placeholder="new password" style="width:9rem">
+                <button type="submit" style="padding:0.1rem 0.5rem">Set</button>
+              </form>
+            </td>
+
+            <!-- Delete -->
+            <td>
+              <form method="POST" action="/admin/users/{{.ID}}/delete" style="margin:0">
+                <button type="submit" class="secondary outline" style="padding:0.1rem 0.5rem">Delete</button>
+              </form>
+            </td>
+          </tr>
+        {{end}}
+        </tbody>
+      </table>
+    </article>
+  </main>
+</body>
+</html>

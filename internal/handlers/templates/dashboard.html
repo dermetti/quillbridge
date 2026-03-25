@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Quillbridge — Dashboard</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+</head>
+<body>
+  <nav class="container-fluid">
+    <ul><li><strong>Quillbridge</strong></li></ul>
+    <ul>
+      {{if .User.IsAdmin}}<li><a href="/admin">Admin</a></li>{{end}}
+      <li>
+        <form method="POST" action="/logout" style="margin:0">
+          <button type="submit" class="secondary outline" style="padding:0.25rem 0.75rem">Sign out</button>
+        </form>
+      </li>
+    </ul>
+  </nav>
+
+  <main class="container">
+    <h2>Welcome, {{.User.Username}}</h2>
+
+    <!-- Storage -->
+    <article>
+      <h4>Storage</h4>
+      <progress value="{{.UsedBytes}}" max="{{.User.QuotaBytes}}"></progress>
+      <small>{{.UsedHuman}} used of {{.QuotaHuman}}</small>
+    </article>
+
+    <!-- Change password -->
+    <article>
+      <h4>Change Password</h4>
+      {{if .PwError}}<p style="color:var(--pico-color-red-500)">{{.PwError}}</p>{{end}}
+      {{if .PwOK}}<p style="color:var(--pico-color-green-500)">Password updated.</p>{{end}}
+      <form method="POST" action="/user/password">
+        <label for="current">Current password</label>
+        <input id="current" name="current" type="password" required>
+        <label for="newpw">New password</label>
+        <input id="newpw" name="new" type="password" required>
+        <label for="confirm">Confirm new password</label>
+        <input id="confirm" name="confirm" type="password" required>
+        <button type="submit">Update password</button>
+      </form>
+    </article>
+
+    <!-- File browser -->
+    <article>
+      <h4>File Browser</h4>
+      <h5>Notes</h5>
+      {{if .Notes}}
+        <table>
+          <thead><tr><th>Filename</th><th>Size</th><th></th></tr></thead>
+          <tbody>
+          {{range .Notes}}
+            <tr>
+              <td>{{.Name}}</td>
+              <td>{{.SizeHuman}}</td>
+              <td>
+                <form method="POST" action="/user/files/delete" style="margin:0;display:inline">
+                  <input type="hidden" name="dir" value="notes">
+                  <input type="hidden" name="file" value="{{.Name}}">
+                  <button type="submit" class="secondary outline" style="padding:0.1rem 0.5rem">Delete</button>
+                </form>
+              </td>
+            </tr>
+          {{end}}
+          </tbody>
+        </table>
+      {{else}}
+        <p><small>No notes yet.</small></p>
+      {{end}}
+
+      <h5>Attachments</h5>
+      {{if .Attachments}}
+        <table>
+          <thead><tr><th>Filename</th><th>Size</th><th></th></tr></thead>
+          <tbody>
+          {{range .Attachments}}
+            <tr>
+              <td>{{.Name}}</td>
+              <td>{{.SizeHuman}}</td>
+              <td>
+                <form method="POST" action="/user/files/delete" style="margin:0;display:inline">
+                  <input type="hidden" name="dir" value="attachments">
+                  <input type="hidden" name="file" value="{{.Name}}">
+                  <button type="submit" class="secondary outline" style="padding:0.1rem 0.5rem">Delete</button>
+                </form>
+              </td>
+            </tr>
+          {{end}}
+          </tbody>
+        </table>
+      {{else}}
+        <p><small>No attachments yet.</small></p>
+      {{end}}
+
+      <!-- Upload -->
+      <h5>Upload File</h5>
+      {{if .UploadError}}<p style="color:var(--pico-color-red-500)">{{.UploadError}}</p>{{end}}
+      <form method="POST" action="/user/files/upload" enctype="multipart/form-data">
+        <input type="file" name="file" required>
+        <label>
+          <select name="dir">
+            <option value="notes">notes/</option>
+            <option value="attachments">attachments/</option>
+          </select>
+        </label>
+        <button type="submit">Upload</button>
+      </form>
+    </article>
+  </main>
+</body>
+</html>
