@@ -1,0 +1,45 @@
+# ========================
+# Go Specifics
+# ========================
+# Compiled binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test output and coverage
+*.test
+*.out
+coverage.txt
+
+# Go workspace file
+go.work
+
+# Vendor directory (Go modules handles dependencies, no need to commit them)
+vendor/
+
+# ========================
+# Editor & OS Specifics
+# ========================
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# ========================
+# 🛑 CRITICAL FOR THIS PROJECT 🛑
+# Prevent pushing your personal data to public GitHub!
+# ========================
+# Ignore your local notes storage folder
+data/
+notes/
+attachments/
+
+# Ignore local databases if we use SQLite
+*.sqlite
+*.sqlite3
+*.db
+
+# Ignore local environment variables (passwords/keys)
+.env
