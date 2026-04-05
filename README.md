@@ -81,6 +81,8 @@ go test ./...
 
 ## Docker Deployment
 
+### Build from scratch
+
 1. Build the Docker image:
    ```bash
    docker build -t quillbridge .
@@ -90,6 +92,10 @@ go test ./...
    ```bash
    docker-compose up
    ```
+
+### Official Docker Image
+
+The official docker image is availible from [here](https://hub.docker.com/repository/docker/dermetti/quillbridge/general). A sample docker-compose.yml is included in the repo.
 
 ## License
 
